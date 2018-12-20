@@ -12,7 +12,7 @@ namespace Chat_Server
         public static void StartServer()
         {
             Int32 port = 5667;
-            IPAddress address = IPAddress.Parse("127.0.0.1");
+            IPAddress address = IPAddress.Any;
 
             TcpListener server = new TcpListener(address, port);
 

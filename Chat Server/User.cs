@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
+using System;
 
 namespace Chat_Server
 {
@@ -27,6 +28,7 @@ namespace Chat_Server
                     name = values[1];
                     friendName = values[2];
 
+
                     clients.AddClient(name, userClient);
 
                     if (pMH.HasMessages(name))
@@ -37,6 +39,8 @@ namespace Chat_Server
                             SendMessage(stream, pendingMessages[j] + "ENDOFLINE");
                         }
                     }
+
+                    Console.WriteLine("Client " + name + " has successfully connected.");
                 }
                 else if (message.Equals("exit"))
                 {
