@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using System.Net.Sockets;
 using System;
+using Utilities;
 
 namespace Chat_Server
 {
@@ -16,7 +16,7 @@ namespace Chat_Server
 
             while (true)
             {
-                string message = MessageHandler.GetNewMessage(userClient, stream);
+                string message = MessageHandler.GetMessage(stream);
 
                 if (message.StartsWith("CONNECTIONSTART"))
                 {
@@ -32,7 +32,7 @@ namespace Chat_Server
                         List<string> pendingMessages = pMH.GetMessages(name);
                         for (int j = 0; j < pendingMessages.Count; j++)
                         {
-                            SendMessage(stream, pendingMessages[j] + "ENDOFLINE");
+                            MessageHandler.SendMessage(stream, pendingMessages[j] + "ENDOFLINE");
                         }
                     }
 
@@ -48,7 +48,7 @@ namespace Chat_Server
                     if (clients.HasClient(friendName))
                     {
                         TcpClient friendClient = clients.GetClient(friendName);
-                        SendMessage(friendClient.GetStream(), message);
+                        MessageHandler.SendMessage(friendClient.GetStream(), message);
                     }
                     else
                     {
@@ -58,13 +58,6 @@ namespace Chat_Server
                 }
             }
         }
-
-        private static void SendMessage(NetworkStream stream, string message)
-        {
-            byte[] data = Encoding.ASCII.GetBytes(message);
-            stream.Write(data, 0, data.Length);
-        }
-
 
     }
 }
