@@ -12,16 +12,12 @@ namespace Chat_Server
 
         public void GetMessage(Clients clients, TcpClient userClient, PendingMessageHandler pMH)
         {
-            byte[] data = new byte[256];
-            string message = null;
-            int i;
-
             NetworkStream stream = userClient.GetStream();
 
-            while ((i = stream.Read(data, 0, data.Length)) != 0)
+            while (true)
             {
-                message = Encoding.ASCII.GetString(data, 0, i);
-               
+                string message = MessageHandler.GetNewMessage(userClient, stream);
+
                 if (message.StartsWith("CONNECTIONSTART"))
                 {
                     string[] values = message.Split(':');
@@ -61,7 +57,6 @@ namespace Chat_Server
 
                 }
             }
-
         }
 
         private static void SendMessage(NetworkStream stream, string message)
