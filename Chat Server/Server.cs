@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Chat_Server.Database;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
+using Utilities;
 
 namespace Chat_Server
 {
@@ -17,6 +18,8 @@ namespace Chat_Server
 
             TcpListener server = new TcpListener(address, port);
 
+            DatabaseHandler databaseHandler = new DatabaseHandler();
+
             Clients clients = new Clients();
 
             PendingMessageHandler pMH = new PendingMessageHandler();
@@ -25,14 +28,38 @@ namespace Chat_Server
 
             while (true)
             {
-                TcpClient userClient = server.AcceptTcpClient();
+                TcpClient client = server.AcceptTcpClient();
 
-                Console.WriteLine("Accepted connection from a client");
+                string message = MessageHandler.GetMessage(client.GetStream());
 
-                User user = new User();
+                if (message.StartsWith("CONNECTIONBEGIN"))
+                {
+                    // This is a user attempting to communicate with another user.
+                    Console.WriteLine("Accepted connection from a client");
 
-                Thread t = new Thread(new ThreadStart(() => user.GetMessage(clients, userClient, pMH)));
-                t.Start();
+                    User user = new User();
+
+                    Thread t = new Thread(new ThreadStart(() => user.GetMessage(clients, client, pMH)));
+                    t.Start();
+                }
+                else
+                {
+                    // This is the admin user attempting to do something server related.
+                    string[] values = message.Split(':');
+
+                    string task = values[0];
+                    
+                    switch (task)
+                    {
+                        case "NEWUSER":
+                            string newUsername = values[1];
+                            string password = values[2];
+                            databaseHandler.AddNewUser(newUsername, password);
+                            break;
+                    }
+                }
+
+
             }
 
         }
