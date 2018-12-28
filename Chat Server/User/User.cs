@@ -41,6 +41,8 @@ namespace Chat_Server
                 else if (message.Equals("exit"))
                 {
                     userClient.Close();
+                    clients.RemoveClient(name);
+                    pMH.Remove(name);
                     break;
                 }
                 else

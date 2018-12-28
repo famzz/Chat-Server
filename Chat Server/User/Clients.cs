@@ -33,5 +33,13 @@ namespace Chat_Server
             }
         }
 
+        public void RemoveClient(string clientName)
+        {
+            lock (_lock)
+            {
+                _clients.Remove(clientName);
+            }
+        }
+
     }
 }

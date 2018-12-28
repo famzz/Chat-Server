@@ -73,6 +73,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Server.cs" />
+    <Compile Include="User\AdminUser.cs" />
     <Compile Include="User\Clients.cs" />
     <Compile Include="User\PendingMessageHandler.cs" />
     <Compile Include="User\User.cs" />

@@ -45,18 +45,11 @@ namespace Chat_Server
                 else
                 {
                     // This is the admin user attempting to do something server related.
-                    string[] values = message.Split(':');
+                    AdminUser adminUser = new AdminUser(client, databaseHandler);
 
-                    string task = values[0];
+                    Thread t = new Thread(new ThreadStart(() => adminUser.GetMessage(message)));
+                    t.Start();
                     
-                    switch (task)
-                    {
-                        case "NEWUSER":
-                            string newUsername = values[1];
-                            string password = values[2];
-                            databaseHandler.AddNewUser(newUsername, password);
-                            break;
-                    }
                 }
 
 

@@ -29,5 +29,23 @@ namespace Chat_Server.Database
 
         }
 
+        public bool VerifyPassword(string username, string password)
+        {
+            SQLiteCommand command = new SQLiteCommand("SELECT password FROM Passwords WHERE username = @0", connection);
+            command.Parameters.AddWithValue("0", username);
+            string result = (string) command.ExecuteScalar();
+            return password.Equals(result);
+        }
+
+        public bool HasAccount(string username)
+        {
+            lock (_lock)
+            {
+                SQLiteCommand command = new SQLiteCommand("SELECT username FROM Passwords WHERE username = @0", connection);
+                command.Parameters.AddWithValue("0", username);
+                return command.ExecuteScalar() != null;
+            }
+        }
+
     }
 }

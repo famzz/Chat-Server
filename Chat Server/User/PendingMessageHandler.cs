@@ -41,5 +41,13 @@ namespace Chat_Server
             }
         }
 
+        public void Remove(string name)
+        {
+            lock (_lock)
+            {
+                pendingMessages.Remove(name);
+            }
+        }
+
     }
 }
